@@ -13,6 +13,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -26,44 +27,33 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-/**
- * This demo shows how GMS Location can be used to check for changes to the users location.  The
- * "My Location" button uses GMS Location to set the blue dot representing the users location.
- * Permission for {@link android.Manifest.permission#ACCESS_FINE_LOCATION} is requested at run
- * time. If the permission has not been granted, the Activity is finished with an error message.
- */
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+
 public class MapsActivity extends AppCompatActivity
         implements
-        GoogleMap.OnMyLocationButtonClickListener,
-        GoogleMap.OnMyLocationClickListener,
         GoogleMap.OnMarkerClickListener,
         GoogleMap.OnMapClickListener,
         GoogleMap.OnInfoWindowClickListener,
         OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
-    /**
-     * Request code for location permission request.
-     *
-     * @see #onRequestPermissionsResult(int, String[], int[])
-     */
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
-    /**
-     * Flag indicating whether a requested permission has been denied after returning in
-     * {@link #onRequestPermissionsResult(int, String[], int[])}.
-     */
     private boolean mPermissionDenied = false;
 
     private GoogleMap mMap;
 
-    /**
-     * Keeps track of the selected marker.
-     */
     private Marker mSelectedMarker;
+    private static final String TAG = "firebase";
 
-    /** Demonstrates customizing the info window and/or its contents. */
     class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         // These are both viewgroups containing an ImageView with id "badge" and two TextViews with id
@@ -112,10 +102,6 @@ public class MapsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -136,14 +122,30 @@ public class MapsActivity extends AppCompatActivity
                 return true;
             }
         });
+
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference myRef = database.child("events/");
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Log.d(TAG, "atest: "+dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+
+        });
+
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
 
-        mMap.setOnMyLocationButtonClickListener(this);
-        mMap.setOnMyLocationClickListener(this);
         mMap.setOnMarkerClickListener(this);
         mMap.setOnMapClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
@@ -154,30 +156,14 @@ public class MapsActivity extends AppCompatActivity
         // Show Melbourne
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-37.813611,144.963056), 14));
 
-        addMarkersToMap();
-
-        enableMyLocation();
-    }
-
-    private void addMarkersToMap() {
-        mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(-37.798697, 144.960304))
-                .title("End of semester party")
-                .snippet("Let's celebrate the end of semester before the exams!\n" +
-                        "Time: 10/25 8pm\n" +
-                        "Going people: 24"));
-        mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(-37.801497, 144.960284))
-                .title("Reading club BBQ")
-                .snippet("Read books while BBQ!\n" +
-                        "Time: 10/31 1pm\n" +
-                        "Going people: 10"));
         mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(-37.806546, 144.958259))
                 .title("Garbage audition")
                 .snippet("Those are some interesting garbage!\n" +
                         "Time: 10/21 2pm\n" +
                         "Going people: 30"));
+
+        enableMyLocation();
     }
 
     /**
@@ -195,18 +181,6 @@ public class MapsActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
-        // Return false so that we don't consume the event and the default behavior still occurs
-        // (the camera animates to the user's current position).
-        return false;
-    }
-
-    @Override
-    public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
