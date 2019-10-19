@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">demo</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_choose_location">Map</string>
     <string name="play_services_not_installed">Google Play services is not installed on this device.</string>
 
     <string name="alpha">Alpha</string>
