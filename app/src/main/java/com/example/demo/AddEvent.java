@@ -45,7 +45,7 @@ public class AddEvent extends AppCompatActivity {
     final Calendar myCalendar = Calendar.getInstance();
     TextView date_text, time_text, address_text;
     TimePickerDialog picker;
-    ImageView add_photo, add_address, photo;
+    ImageView add_photo, add_address, photo, back;
     Button submit;
     String location, address, name, date, time, des, initiator, uid;
     EditText name_text, des_text;
@@ -53,6 +53,7 @@ public class AddEvent extends AppCompatActivity {
     private Uri mImageUri;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
+    private DatabaseReference userRef;
     private StorageTask mUploadTask;
 
     @Override
@@ -69,9 +70,12 @@ public class AddEvent extends AppCompatActivity {
         des_text = findViewById(R.id.des);
         photo = findViewById(R.id.photo);
         submit = findViewById(R.id.submit);
+        back = findViewById(R.id.back);
 
         mStorageRef = FirebaseStorage.getInstance().getReference("images");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("events");
+
+        userRef = FirebaseDatabase.getInstance().getReference("users_events");
 
         time_text.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +112,15 @@ public class AddEvent extends AppCompatActivity {
                 openFileChooser();
             }
         });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,6 +236,10 @@ public class AddEvent extends AppCompatActivity {
                             mDatabaseRef.child(uploadId).child("location").setValue(location);
                             mDatabaseRef.child(uploadId).child("description").setValue(des);
                             mDatabaseRef.child(uploadId).child("initiator").setValue(initiator);
+                            mDatabaseRef.child(uploadId).child("participant").setValue("1");
+                            mDatabaseRef.child(uploadId).child("participant_uid").child(uid).setValue("0");
+
+                            userRef.child(uid).child(uploadId).setValue("0");
 
                             Toast.makeText(AddEvent.this, "Upload successful", Toast.LENGTH_LONG).show();
 

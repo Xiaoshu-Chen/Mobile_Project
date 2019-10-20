@@ -79,6 +79,7 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setMyLocationEnabled(true);
         LatLng current = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
 //        Log.d(TAG, "address1: "+currentLocation.getLatitude()+","+currentLocation.getLongitude());
 
