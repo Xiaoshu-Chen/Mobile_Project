@@ -113,6 +113,8 @@ public class MapsActivity extends AppCompatActivity
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.settings:
+                        Intent intent1 = new Intent(getApplicationContext(), setting.class);
+                        startActivity(intent1);
 
                         break;
                     case R.id.add:

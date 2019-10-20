@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -45,7 +47,7 @@ public class AddEvent extends AppCompatActivity {
     TimePickerDialog picker;
     ImageView add_photo, add_address, photo;
     Button submit;
-    String location, address, name, date, time, des;
+    String location, address, name, date, time, des, initiator, uid;
     EditText name_text, des_text;
     private static final int PICK_IMAGE_REQUEST = 102;
     private Uri mImageUri;
@@ -79,11 +81,21 @@ public class AddEvent extends AppCompatActivity {
                 int minutes = cldr.get(Calendar.MINUTE);
                 picker = new TimePickerDialog(AddEvent.this,AlertDialog.THEME_HOLO_LIGHT,
                         new TimePickerDialog.OnTimeSetListener() {
-
                             @Override
                             public void onTimeSet(TimePicker tp, int sHour, int sMinute) {
-                                time_text.setText(sHour + ":" + sMinute);
-                                time = sHour + ":" + sMinute;
+                                String hh, mm;
+                                if (String.valueOf(sHour).length() == 1){
+                                    hh = "0"+sHour;
+                                } else {
+                                    hh = ""+sHour;
+                                }
+                                if (String.valueOf(sMinute).length() == 1){
+                                    mm = "0"+sMinute;
+                                } else {
+                                    mm = ""+sMinute;
+                                }
+                                time_text.setText(hh + ":" + mm);
+                                time = hh+mm;
                             }
                         }, hour, minutes, true);
                 picker.show();
@@ -136,14 +148,30 @@ public class AddEvent extends AppCompatActivity {
                 startActivityForResult(i, 1);
             }
         });
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            initiator = user.getDisplayName();
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getIdToken() instead.
+            uid = user.getUid();
+
+
+        }
     }
 
     private void updateLabel() {
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
+
+        String myFormat1 = "yyddMM";
+        SimpleDateFormat sdf1 = new SimpleDateFormat(myFormat1, Locale.US);
         date_text.setText(sdf.format(myCalendar.getTime()));
-        date = sdf.format(myCalendar.getTime());
+        date = sdf1.format(myCalendar.getTime());
     }
 
     @Override
@@ -194,6 +222,7 @@ public class AddEvent extends AppCompatActivity {
                             mDatabaseRef.child(uploadId).child("time").setValue(time);
                             mDatabaseRef.child(uploadId).child("location").setValue(location);
                             mDatabaseRef.child(uploadId).child("description").setValue(des);
+                            mDatabaseRef.child(uploadId).child("initiator").setValue(initiator);
 
                             Toast.makeText(AddEvent.this, "Upload successful", Toast.LENGTH_LONG).show();
 

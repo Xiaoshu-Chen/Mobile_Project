@@ -30,6 +30,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -79,6 +81,7 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
         mMap.getUiSettings().setZoomControlsEnabled(true);
         LatLng current = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
 //        Log.d(TAG, "address1: "+currentLocation.getLatitude()+","+currentLocation.getLongitude());
+
 
         currentMarker = mMap.addMarker(new MarkerOptions().position(current).title("Current location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 15));
