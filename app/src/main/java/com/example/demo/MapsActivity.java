@@ -32,9 +32,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.snapshot.StringNode;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class MapsActivity extends AppCompatActivity
@@ -123,20 +128,6 @@ public class MapsActivity extends AppCompatActivity
             }
         });
 
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference myRef = database.child("events/");
-
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Log.d(TAG, "atest: "+dataSnapshot.getValue().toString());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-
-        });
-
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -156,12 +147,38 @@ public class MapsActivity extends AppCompatActivity
         // Show Melbourne
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-37.813611,144.963056), 14));
 
-        mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(-37.806546, 144.958259))
-                .title("Garbage audition")
-                .snippet("Those are some interesting garbage!\n" +
-                        "Time: 10/21 2pm\n" +
-                        "Going people: 30"));
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference myRef = database.child("events/");
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot eventSnapShot : dataSnapshot.getChildren()) {
+                    String eventId = (String) eventSnapShot.getKey();
+                    String[] latlng = ((String) eventSnapShot.child("location").getValue()).split(",");
+                    Double latitude = Double.parseDouble(latlng[0]);
+                    Double longitude = Double.parseDouble(latlng[1]);
+                    String name = (String) eventSnapShot.child("name").getValue();
+                    String description = (String) eventSnapShot.child("description").getValue();
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(latitude, longitude))
+                            .title(name)
+                            .snippet(description));
+                    marker.setTag(eventId);
+                    Log.d(TAG, "added Marker of event " + name);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+
+        });
+//        mMap.addMarker(new MarkerOptions()
+//                .position(new LatLng(-37.806546, 144.958259))
+//                .title("Garbage audition")
+//                .snippet("Those are some interesting garbage!\n" +
+//                        "Time: 10/21 2pm\n" +
+//                        "Going people: 30"));
 
         enableMyLocation();
     }
@@ -245,6 +262,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+        String eventId = (String) marker.getTag();
         Toast.makeText(this, "Click Info Window", Toast.LENGTH_SHORT).show();
     }
 }
