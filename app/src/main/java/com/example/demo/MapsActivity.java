@@ -48,6 +48,9 @@ import com.google.firebase.database.snapshot.StringNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -225,7 +228,7 @@ public class MapsActivity extends AppCompatActivity
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
 
 //        Log.d(TAG, "address1: "+currentLocation.getLatitude() +","+currentLocation.getLongitude());
-        LatLng current = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
+        final LatLng current = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 15));
 
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
@@ -235,18 +238,37 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot eventSnapShot : dataSnapshot.getChildren()) {
-                    String eventId = (String) eventSnapShot.getKey();
-                    String[] latlng = ((String) eventSnapShot.child("location").getValue()).split(",");
-                    Double latitude = Double.parseDouble(latlng[0]);
-                    Double longitude = Double.parseDouble(latlng[1]);
-                    String name = (String) eventSnapShot.child("name").getValue();
-                    String description = (String) eventSnapShot.child("description").getValue();
-                    Marker marker = mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(latitude, longitude))
-                            .title(name)
-                            .snippet(description));
-                    marker.setTag(eventId);
+                    String adate = (String) eventSnapShot.child("date").getValue();
+                    String atime = (String) eventSnapShot.child("time").getValue();
+                    int date = Integer.parseInt(adate);
+                    int time = Integer.parseInt(atime);
+
+                    Date c = Calendar.getInstance().getTime();
+                    SimpleDateFormat df = new SimpleDateFormat("yyMMdd");
+                    String formattedDate = df.format(c);
+                    SimpleDateFormat tf = new SimpleDateFormat("HHmm");
+                    String formattedTime = tf.format(c);
+                    int current_date = Integer.parseInt(formattedDate);
+                    int current_time = Integer.parseInt(formattedTime);
+
+                    if (date < current_date){
+
+                    } else if (date==current_date && time<=current_time){
+
+                    } else {
+                        String eventId = (String) eventSnapShot.getKey();
+                        String[] latlng = ((String) eventSnapShot.child("location").getValue()).split(",");
+                        Double latitude = Double.parseDouble(latlng[0]);
+                        Double longitude = Double.parseDouble(latlng[1]);
+                        String name = (String) eventSnapShot.child("name").getValue();
+                        String description = (String) eventSnapShot.child("description").getValue();
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(latitude, longitude))
+                                .title(name)
+                                .snippet(description));
+                        marker.setTag(eventId);
 //                    Log.d(TAG, "added Marker of event " + name);
+                    }
                 }
             }
 
@@ -352,5 +374,36 @@ public class MapsActivity extends AppCompatActivity
                 }
             }
         });
+    }
+
+    private boolean isPastEvent(String eventId) {
+        boolean result = false;
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference eventRef = database.child("events/"+eventId);
+
+        eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot eventSnapShot : dataSnapshot.getChildren()) {
+                    String eventId = (String) eventSnapShot.getKey();
+                    String[] latlng = ((String) eventSnapShot.child("location").getValue()).split(",");
+                    Double latitude = Double.parseDouble(latlng[0]);
+                    Double longitude = Double.parseDouble(latlng[1]);
+                    String name = (String) eventSnapShot.child("name").getValue();
+                    String description = (String) eventSnapShot.child("description").getValue();
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(latitude, longitude))
+                            .title(name)
+                            .snippet(description));
+                    marker.setTag(eventId);
+//                    Log.d(TAG, "added Marker of event " + name);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+
+        });
+        return result;
     }
 }
