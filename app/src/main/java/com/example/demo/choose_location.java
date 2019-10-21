@@ -41,6 +41,7 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Locale;
 
+// choose location on the map.
 public class choose_location extends FragmentActivity implements OnMapReadyCallback, SensorEventListener {
 
     private GoogleMap mMap;
@@ -57,6 +58,7 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
     int darkMode = 0;
     int previous = 0;
 
+    // Create the connections and listen to different event actions.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,9 +67,12 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
 
         address = findViewById(R.id.address);
         OK = findViewById(R.id.OK);
+
+        // Create initialize sensor obj.
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(sensor.TYPE_LIGHT);
 
+        //initialize location service.
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(choose_location.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(choose_location.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
@@ -87,6 +92,7 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
     }
 
 
+    // initialize the google map and make current marker on map.
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -126,6 +132,7 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
         });
     }
 
+    //Fetch the entire address from the map.
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -150,6 +157,7 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
         return strAdd;
     }
 
+    //Display the fetched location.
     private void fetchLastLocation(){
         Task<Location> task = fusedLocationClient.getLastLocation();
         task.addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -174,6 +182,7 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
                 });
     }
 
+    //Handle the location permission.
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult) {
         switch (requestCode) {
@@ -187,18 +196,21 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
         }
     }
 
+    // pause the sensor.
     @Override
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
     }
 
+    // resume the sensor.
     @Override
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    // Change mode based on the data from the sensor.
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {

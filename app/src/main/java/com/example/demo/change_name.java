@@ -44,6 +44,7 @@ public class change_name extends AppCompatActivity {
         });
     }
 
+    // When confirm button is clicked, update user name to firebase.
     public void confirmBtn(View view) {
         name_context = change_name.getText().toString();
 
@@ -52,7 +53,7 @@ public class change_name extends AppCompatActivity {
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(name_context)
                 .build();
-
+        //Make change to the database.
         user.updateProfile(profileUpdates)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

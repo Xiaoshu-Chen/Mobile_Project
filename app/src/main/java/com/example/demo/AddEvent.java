@@ -46,7 +46,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
-//Add new event
+//Add new event page.
 public class AddEvent extends AppCompatActivity {
 
     final Calendar myCalendar = Calendar.getInstance();
