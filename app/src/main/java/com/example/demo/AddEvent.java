@@ -11,12 +11,17 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -37,6 +42,7 @@ import com.squareup.picasso.Picasso;
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -55,6 +61,8 @@ public class AddEvent extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private DatabaseReference userRef;
     private StorageTask mUploadTask;
+    private PopupWindow mPopupWindow;
+    private RelativeLayout mRelativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +79,7 @@ public class AddEvent extends AppCompatActivity {
         photo = findViewById(R.id.photo);
         submit = findViewById(R.id.submit);
         back = findViewById(R.id.back);
+        mRelativeLayout = findViewById(R.id.rl);
 
         mStorageRef = FirebaseStorage.getInstance().getReference("images");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("events");
@@ -243,7 +252,8 @@ public class AddEvent extends AppCompatActivity {
 
                             Toast.makeText(AddEvent.this, "Upload successful", Toast.LENGTH_LONG).show();
 
-
+                            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                            startActivity(intent);
 
                         }
                     })
@@ -271,4 +281,41 @@ public class AddEvent extends AppCompatActivity {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
+
+//    private void showPopUp() {
+//        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+//        View customView = inflater.inflate(R.layout.pop_up,null);
+//
+//        mPopupWindow = new PopupWindow(
+//                customView,
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                330
+//        );
+//        mPopupWindow.setElevation(5.0f);
+//
+//        Button yes = findViewById(R.id.yes);
+//        Button no =findViewById(R.id.no);
+//
+//        yes.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
+//
+//        no.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // Dismiss the popup window
+//                mPopupWindow.dismiss();
+//
+//                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        mPopupWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
+//
+//    }
+
 }

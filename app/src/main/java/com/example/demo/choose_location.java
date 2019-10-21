@@ -4,8 +4,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -25,6 +30,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,7 +41,7 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Locale;
 
-public class choose_location extends FragmentActivity implements OnMapReadyCallback {
+public class choose_location extends FragmentActivity implements OnMapReadyCallback, SensorEventListener {
 
     private GoogleMap mMap;
     TextView address;
@@ -46,6 +52,10 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
     Marker currentMarker;
     private static final int LOCATION_REQUEST_CODE =101;
     String result, address_text1;
+    SensorManager sensorManager;
+    Sensor sensor;
+    int darkMode = 0;
+    int previous = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +65,8 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
 
         address = findViewById(R.id.address);
         OK = findViewById(R.id.OK);
+        sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(sensor.TYPE_LIGHT);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(choose_location.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(choose_location.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -80,6 +92,16 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setMyLocationEnabled(true);
+
+        if (darkMode == 1) {
+            boolean success = mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json));
+        } else if (darkMode == 2) {
+            boolean success = mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json2));
+        }
         LatLng current = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
 //        Log.d(TAG, "address1: "+currentLocation.getLatitude()+","+currentLocation.getLongitude());
 
@@ -163,5 +185,38 @@ public class choose_location extends FragmentActivity implements OnMapReadyCallb
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {
+            if (sensorEvent.values[0] < 13333) {
+                previous = darkMode;
+                darkMode = 1;
+            } else if (sensorEvent.values[0] < 26666){
+                previous = darkMode;
+                darkMode = 2;
+            } else {
+                previous = darkMode;
+                darkMode = 3;
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }
