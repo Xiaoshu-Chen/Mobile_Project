@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+// Change name page.
 public class change_name extends AppCompatActivity {
 
     EditText change_name;
@@ -25,6 +26,7 @@ public class change_name extends AppCompatActivity {
     ImageView back;
     String name_context;
 
+    // Create the connections and listen to different event actions.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -65,6 +65,7 @@ public class AddEvent extends AppCompatActivity {
     private PopupWindow mPopupWindow;
     private RelativeLayout mRelativeLayout;
 
+    // Create the connections and listen to different event actions.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,11 +83,12 @@ public class AddEvent extends AppCompatActivity {
         back = findViewById(R.id.back);
         mRelativeLayout = findViewById(R.id.rl);
 
+        //Create ref to the firebase.
         mStorageRef = FirebaseStorage.getInstance().getReference("images");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("events");
-
         userRef = FirebaseDatabase.getInstance().getReference("users_events");
 
+        ///To update time on Calendar.
         time_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,6 +188,7 @@ public class AddEvent extends AppCompatActivity {
         }
     }
 
+    //Update label and set the format of the date.
     private void updateLabel() {
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -197,6 +200,7 @@ public class AddEvent extends AppCompatActivity {
         date = sdf1.format(myCalendar.getTime());
     }
 
+    //Set the preview on page.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -219,6 +223,7 @@ public class AddEvent extends AppCompatActivity {
         }
     }
 
+    //Create file chooser obj.
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -226,15 +231,19 @@ public class AddEvent extends AppCompatActivity {
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
+    //Upload the new event.
     private void uploadFile() {
         name = name_text.getText().toString();
         des = des_text.getText().toString();
 
         final String uploadId = mDatabaseRef.push().getKey();
+
+        // Must select an image.
         if (mImageUri != null) {
             StorageReference fileReference = mStorageRef.child(uploadId
                     + "." + getFileExtension(mImageUri));
 
+            //Upload to firebase.
             mUploadTask = fileReference.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -277,6 +286,7 @@ public class AddEvent extends AppCompatActivity {
         }
     }
 
+    //return the proper map type.
     private String getFileExtension(Uri uri) {
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
