@@ -16,12 +16,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+// Change password page.
 public class change_password extends AppCompatActivity {
 
     EditText change_password;
     Button confirm;
     ImageView back;
 
+    // Create the connections and listen to different event actions.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +41,12 @@ public class change_password extends AppCompatActivity {
         });
     }
 
+    // When confirm button is clicked, update user name to firebase.
     public void confirmBtn(View view) {
         String password = change_password.getText().toString();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+        //Make change to the database.
         user.updatePassword(password)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

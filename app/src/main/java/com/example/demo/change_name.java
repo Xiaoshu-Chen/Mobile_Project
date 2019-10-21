@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+// Change name page.
 public class change_name extends AppCompatActivity {
 
     EditText change_name;
@@ -25,6 +26,7 @@ public class change_name extends AppCompatActivity {
     ImageView back;
     String name_context;
 
+    // Create the connections and listen to different event actions.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class change_name extends AppCompatActivity {
         });
     }
 
+    // When confirm button is clicked, update user name to firebase.
     public void confirmBtn(View view) {
         name_context = change_name.getText().toString();
 
@@ -50,7 +53,7 @@ public class change_name extends AppCompatActivity {
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(name_context)
                 .build();
-
+        //Make change to the database.
         user.updateProfile(profileUpdates)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
