@@ -38,8 +38,7 @@ public class change_name extends AppCompatActivity {
 
         back.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent = new Intent(getApplicationContext(), setting.class);
-                startActivity(intent);
+                finish();
             }
         });
     }

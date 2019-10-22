@@ -185,7 +185,8 @@ public class MapsActivity extends AppCompatActivity
 
                         break;
                     case R.id.profile:
-
+                        Intent intent2 = new Intent(getApplicationContext(), Profile.class);
+                        startActivity(intent2);
                         break;
                 }
                 return true;

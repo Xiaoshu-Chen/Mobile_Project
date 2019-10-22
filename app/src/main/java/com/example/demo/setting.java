@@ -50,10 +50,9 @@ public class setting extends AppCompatActivity {
             }
         });
 
-        change_password.setOnClickListener(new View.OnClickListener(){
+        back.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
     }

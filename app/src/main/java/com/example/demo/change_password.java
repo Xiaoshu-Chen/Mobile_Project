@@ -35,8 +35,7 @@ public class change_password extends AppCompatActivity {
 
         back.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent = new Intent(getApplicationContext(), setting.class);
-                startActivity(intent);
+                finish();
             }
         });
     }
