@@ -22,6 +22,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +68,7 @@ public class MapsActivity extends AppCompatActivity
 
     private FusedLocationProviderClient fusedLocationClient;
     private Location currentLocation;
+    ImageView list;
 
     private boolean mPermissionDenied = false;
 
@@ -169,6 +171,7 @@ public class MapsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        list = findViewById(R.id.list);
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -190,6 +193,14 @@ public class MapsActivity extends AppCompatActivity
                         break;
                 }
                 return true;
+            }
+        });
+
+        list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), List_events.class);
+                startActivity(intent);
             }
         });
 
@@ -252,9 +263,7 @@ public class MapsActivity extends AppCompatActivity
                     int current_date = Integer.parseInt(formattedDate);
                     int current_time = Integer.parseInt(formattedTime);
 
-                    if (date < current_date){
-
-                    } else if (date==current_date && time<=current_time){
+                    if (date < current_date || (date==current_date && time<=current_time)){
 
                     } else {
                         String eventId = (String) eventSnapShot.getKey();
