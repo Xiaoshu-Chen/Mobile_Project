@@ -56,7 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+// Handle the event object on the map.
 public class MapsActivity extends AppCompatActivity
         implements
         GoogleMap.OnMarkerClickListener,
@@ -84,18 +84,21 @@ public class MapsActivity extends AppCompatActivity
     int darkMode = 0;
     int previous = 0;
 
+    // Pause the sensor.
     @Override
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
     }
 
+    //Resume the sensor.
     @Override
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    //Change the monitor mode based on the data from sensor.
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_LIGHT) {
@@ -123,6 +126,7 @@ public class MapsActivity extends AppCompatActivity
 
     }
 
+
     class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         // These are both viewgroups containing an ImageView with id "badge" and two TextViews with id
@@ -144,6 +148,7 @@ public class MapsActivity extends AppCompatActivity
             return mContents;
         }
 
+        //the function to display the content of the view.
         private void render(Marker marker, View view) {
             String title = marker.getTitle();
             TextView titleUi = ((TextView) view.findViewById(R.id.title));
@@ -166,6 +171,7 @@ public class MapsActivity extends AppCompatActivity
         }
     }
 
+    //initialize the class and connect the code to the items.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -204,6 +210,7 @@ public class MapsActivity extends AppCompatActivity
             }
         });
 
+        //initialize the sensor manager.
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(sensor.TYPE_LIGHT);
 
@@ -216,6 +223,7 @@ public class MapsActivity extends AppCompatActivity
 
     }
 
+    // set the map ready.
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
@@ -243,9 +251,11 @@ public class MapsActivity extends AppCompatActivity
         final LatLng current = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 15));
 
+        //create the reference to firebase.
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         DatabaseReference myRef = database.child("events/");
 
+        //listen to any data change on the map and update it.
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -296,7 +306,6 @@ public class MapsActivity extends AppCompatActivity
 
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult) {
         switch (requestCode) {
@@ -327,6 +336,7 @@ public class MapsActivity extends AppCompatActivity
         PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
     }
+
     @Override
     public void onMapClick(final LatLng point) {
         // Any showing info window closes when the map is clicked.
