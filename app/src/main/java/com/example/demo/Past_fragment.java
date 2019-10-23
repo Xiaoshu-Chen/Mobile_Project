@@ -32,12 +32,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
+//The class of old event list.
 public class Past_fragment extends ListFragment implements AdapterView.OnItemClickListener{
 
     HashMap<String, String> event = new HashMap<>();
     String[] name;
 
+    //initialize the layout and events.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class Past_fragment extends ListFragment implements AdapterView.OnItemCli
         return view;
     }
 
-
+    //create the item clicked listener.
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -67,7 +68,7 @@ public class Past_fragment extends ListFragment implements AdapterView.OnItemCli
 
     }
 
-
+    //When an item is clicked.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String item = (String) getListView().getItemAtPosition(position);

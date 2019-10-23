@@ -18,6 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+//The sign in page class.
 public class SignIn extends AppCompatActivity {
 
     EditText email_text, password_text;
@@ -26,6 +27,7 @@ public class SignIn extends AppCompatActivity {
     String email, password;
     private static final String TAG = "Sign_in";
 
+    //initialize the class, and connect items.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +46,12 @@ public class SignIn extends AppCompatActivity {
         });
     }
 
+    // The login event.
     public void loginBtn(View view) {
         email = email_text.getText().toString();
         password = password_text.getText().toString();
 
+        //Sign in to firebase.
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override

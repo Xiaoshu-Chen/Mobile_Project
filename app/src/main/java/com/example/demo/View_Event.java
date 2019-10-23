@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
+//The event class on the map.
 public class View_Event extends AppCompatActivity {
 
     String eventId, uid;
@@ -40,6 +41,7 @@ public class View_Event extends AppCompatActivity {
     Button join;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+    // Initialize the view and connect the items.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,7 @@ public class View_Event extends AppCompatActivity {
 
         final DatabaseReference userRef = database.child("users_events");
 
+        //When new
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -80,6 +83,7 @@ public class View_Event extends AppCompatActivity {
             }
         });
 
+        //when data change on the firebase, update the view.
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -114,6 +118,7 @@ public class View_Event extends AppCompatActivity {
 
         });
 
+        //The join event listener.
         join.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 int num = Integer.parseInt(participant.getText().toString()) +1;
@@ -135,6 +140,7 @@ public class View_Event extends AppCompatActivity {
         });
     }
 
+    //To get the complete address string from geocode.
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
