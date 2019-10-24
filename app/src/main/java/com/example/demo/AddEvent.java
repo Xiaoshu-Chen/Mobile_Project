@@ -55,11 +55,11 @@ public class AddEvent extends AppCompatActivity {
 
     final Calendar myCalendar = Calendar.getInstance();
     final Calendar cldr = Calendar.getInstance();
-    TextView date_text, time_text, address_text;
+    TextView date_text, time_text, address_text, etime_text;
     TimePickerDialog picker;
     ImageView add_photo, add_address, photo, back;
     Button submit;
-    String location, address, name, date, time, des, initiator, uid;
+    String location, address, name, date, time, etime, des, initiator, uid;
     EditText name_text, des_text;
     private static final int PICK_IMAGE_REQUEST = 102;
     private Uri mImageUri;
@@ -78,6 +78,7 @@ public class AddEvent extends AppCompatActivity {
 
         date_text = findViewById(R.id.date);
         time_text = findViewById(R.id.time);
+        etime_text = findViewById(R.id.etime);
         add_address = findViewById(R.id.add_address);
         add_photo = findViewById(R.id.add_photo);
         address_text = findViewById(R.id.address);
@@ -160,10 +161,34 @@ public class AddEvent extends AppCompatActivity {
             }
         };
 
+        final TimePickerDialog.OnTimeSetListener mtime1 = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker tp, int sHour, int sMinute) {
+                // TODO Auto-generated method stub
+                cldr.set(Calendar.HOUR_OF_DAY, sHour);
+                cldr.set(Calendar.MINUTE, sMinute);
+
+                String myFormat = "HH:mm";
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+                String myFormat1 = "HHmm";
+                SimpleDateFormat sdf1 = new SimpleDateFormat(myFormat1, Locale.US);
+                etime_text.setText(sdf.format(cldr.getTime()));
+                etime = sdf1.format(cldr.getTime());
+            }
+        };
+
         time_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new TimePickerDialog(AddEvent.this, AlertDialog.THEME_HOLO_LIGHT, mtime, cldr
+                        .get(Calendar.HOUR_OF_DAY), cldr.get(Calendar.MINUTE), true).show();
+            }
+        });
+
+        etime_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(AddEvent.this, AlertDialog.THEME_HOLO_LIGHT, mtime1, cldr
                         .get(Calendar.HOUR_OF_DAY), cldr.get(Calendar.MINUTE), true).show();
             }
         });
@@ -267,54 +292,59 @@ public class AddEvent extends AppCompatActivity {
         int current_date = Integer.parseInt(formattedDate);
         int current_time = Integer.parseInt(formattedTime);
 //        Log.d("time2", current_date+" "+current_time);
-        if(Integer.parseInt(date)<current_date || (Integer.parseInt(date)==current_date && Integer.parseInt(time)<=current_time)){
+
+        if (Integer.parseInt(etime) <= Integer.parseInt(time)) {
             Toast.makeText(AddEvent.this, "Invalid date or time!", Toast.LENGTH_LONG).show();
         } else {
-            //create the unique key for upload data.
-            final String uploadId = mDatabaseRef.push().getKey();
-            if (mImageUri != null) {
-                StorageReference fileReference = mStorageRef.child(uploadId
-                        + "." + getFileExtension(mImageUri));
-
-                mUploadTask = fileReference.putFile(mImageUri)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                                mDatabaseRef.child(uploadId).child("name").setValue(name);
-                                mDatabaseRef.child(uploadId).child("date").setValue(date);
-                                mDatabaseRef.child(uploadId).child("time").setValue(time);
-                                mDatabaseRef.child(uploadId).child("location").setValue(location);
-                                mDatabaseRef.child(uploadId).child("description").setValue(des);
-                                mDatabaseRef.child(uploadId).child("initiator").setValue(initiator);
-                                mDatabaseRef.child(uploadId).child("participant").setValue("1");
-                                mDatabaseRef.child(uploadId).child("participant_uid").child(uid).setValue("0");
-
-                                userRef.child(uid).child(uploadId).setValue("0");
-
-                                Toast.makeText(AddEvent.this, "Upload successful", Toast.LENGTH_LONG).show();
-
-                                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                                startActivity(intent);
-
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(AddEvent.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                            }
-                        })
-                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-
-                            }
-                        });
+            if (Integer.parseInt(date) < current_date || (Integer.parseInt(date) == current_date && Integer.parseInt(time) <= current_time)) {
+                Toast.makeText(AddEvent.this, "Invalid date or time!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+                //create the unique key for upload data.
+                final String uploadId = mDatabaseRef.push().getKey();
+                if (mImageUri != null) {
+                    StorageReference fileReference = mStorageRef.child(uploadId
+                            + "." + getFileExtension(mImageUri));
+
+                    mUploadTask = fileReference.putFile(mImageUri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                    mDatabaseRef.child(uploadId).child("name").setValue(name);
+                                    mDatabaseRef.child(uploadId).child("date").setValue(date);
+                                    mDatabaseRef.child(uploadId).child("time").setValue(time);
+                                    mDatabaseRef.child(uploadId).child("location").setValue(location);
+                                    mDatabaseRef.child(uploadId).child("description").setValue(des);
+                                    mDatabaseRef.child(uploadId).child("initiator").setValue(initiator);
+                                    mDatabaseRef.child(uploadId).child("participant").setValue("1");
+                                    mDatabaseRef.child(uploadId).child("participant_uid").child(uid).setValue("0");
+
+                                    userRef.child(uid).child(uploadId).setValue("0");
+
+                                    Toast.makeText(AddEvent.this, "Upload successful", Toast.LENGTH_LONG).show();
+
+                                    Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                                    startActivity(intent);
+
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(AddEvent.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                }
+                            })
+                            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+
+                                }
+                            });
+                } else {
+                    Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
