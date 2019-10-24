@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+//the sign up page class.
 public class SignUp extends AppCompatActivity {
 
     EditText name_text, email_text, password_text, confirm_text;
@@ -24,6 +25,7 @@ public class SignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private static final String TAG = "SignUp";
 
+    // initialize the items.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,7 @@ public class SignUp extends AppCompatActivity {
 
     }
 
+    // The sign up event connected to firebase.
     public void signupBtn(View view) {
         email = email_text.getText().toString();
         name = name_text.getText().toString();
@@ -68,6 +71,7 @@ public class SignUp extends AppCompatActivity {
         }
     }
 
+    // To set the display name to firebase.
     public void updateProfile(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 

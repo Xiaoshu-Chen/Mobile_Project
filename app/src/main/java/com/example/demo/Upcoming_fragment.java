@@ -32,12 +32,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
+// The class of coming event fragment.
 public class Upcoming_fragment extends ListFragment implements AdapterView.OnItemClickListener{
 
     HashMap<String, String> event = new HashMap<>();
     String[] name;
 
+    //Create the view and initialize items.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class Upcoming_fragment extends ListFragment implements AdapterView.OnIte
     }
 
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -68,6 +70,7 @@ public class Upcoming_fragment extends ListFragment implements AdapterView.OnIte
     }
 
 
+    //When fragment is clicked, show the intent.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String item = (String) getListView().getItemAtPosition(position);

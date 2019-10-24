@@ -49,6 +49,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+
+// Add event page.
 public class AddEvent extends AppCompatActivity {
 
     final Calendar myCalendar = Calendar.getInstance();
@@ -68,6 +70,7 @@ public class AddEvent extends AppCompatActivity {
     private PopupWindow mPopupWindow;
     private RelativeLayout mRelativeLayout;
 
+    //Create the connection between items and code, and initialize listeners.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,6 +222,7 @@ public class AddEvent extends AppCompatActivity {
         }
     }
 
+    // Get the result from activities and set the img url.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -241,6 +245,7 @@ public class AddEvent extends AppCompatActivity {
         }
     }
 
+    // initialize the chooser to pick image.
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -248,11 +253,13 @@ public class AddEvent extends AppCompatActivity {
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
+    //Upload data to firebase.
     private void uploadFile() {
         name = name_text.getText().toString();
         des = des_text.getText().toString();
 
         Date c = Calendar.getInstance().getTime();
+        //set the formate of time and date.
         SimpleDateFormat df = new SimpleDateFormat("yyMMdd");
         String formattedDate = df.format(c);
         SimpleDateFormat tf = new SimpleDateFormat("HHmm");
@@ -263,6 +270,7 @@ public class AddEvent extends AppCompatActivity {
         if(Integer.parseInt(date)<current_date || (Integer.parseInt(date)==current_date && Integer.parseInt(time)<=current_time)){
             Toast.makeText(AddEvent.this, "Invalid date or time!", Toast.LENGTH_LONG).show();
         } else {
+            //create the unique key for upload data.
             final String uploadId = mDatabaseRef.push().getKey();
             if (mImageUri != null) {
                 StorageReference fileReference = mStorageRef.child(uploadId

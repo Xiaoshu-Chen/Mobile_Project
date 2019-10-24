@@ -26,11 +26,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+// The list of events obj, handling all the events of one user.
 public class List_events extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     ListView listView;
     ImageView back;
 
+    // initialize the obj, link the item to the code.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,7 @@ public class List_events extends AppCompatActivity implements AdapterView.OnItem
             }
         });
 
+        //Listen to any change on the event
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

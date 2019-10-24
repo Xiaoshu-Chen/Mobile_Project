@@ -11,11 +11,13 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+// The setting page class.
 public class setting extends AppCompatActivity {
 
     ImageView back;
     TextView change_name, change_password, sign_out;
 
+    // initialize the class, make connections, and start listen to events.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

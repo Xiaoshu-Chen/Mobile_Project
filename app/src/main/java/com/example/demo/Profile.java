@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+//The profile page class.
 public class Profile extends AppCompatActivity {
 
     ImageView back;
@@ -42,6 +43,7 @@ public class Profile extends AppCompatActivity {
     final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     final String uid = user.getUid();
 
+    // initialize the class and connect the items with the code.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,7 @@ public class Profile extends AppCompatActivity {
         name_text = user.getDisplayName();
         name.setText(name_text);
 
+        // Listening on data changes from firebase, and update the layout.
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -137,6 +140,7 @@ public class Profile extends AppCompatActivity {
 
     }
 
+    // change the formate of the fragment.
     public void changFragment (View view) {
         Fragment fragment;
 
