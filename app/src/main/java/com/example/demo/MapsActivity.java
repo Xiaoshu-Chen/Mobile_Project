@@ -68,7 +68,7 @@ public class MapsActivity extends AppCompatActivity
 
     private FusedLocationProviderClient fusedLocationClient;
     private Location currentLocation;
-    ImageView list;
+    ImageView list,refresh;
 
     private boolean mPermissionDenied = false;
 
@@ -120,6 +120,7 @@ public class MapsActivity extends AppCompatActivity
             }
         }
     }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
@@ -176,7 +177,7 @@ public class MapsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
+        refresh = findViewById(R.id.refresh);
         list = findViewById(R.id.list);
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -209,6 +210,16 @@ public class MapsActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
+
 
         //initialize the sensor manager.
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
