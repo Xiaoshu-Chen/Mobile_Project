@@ -312,7 +312,8 @@ public class AddEvent extends AppCompatActivity {
 
                                     mDatabaseRef.child(uploadId).child("name").setValue(name);
                                     mDatabaseRef.child(uploadId).child("date").setValue(date);
-                                    mDatabaseRef.child(uploadId).child("time").setValue(time);
+                                    mDatabaseRef.child(uploadId).child("start_time").setValue(time);
+                                    mDatabaseRef.child(uploadId).child("end_time").setValue(etime);
                                     mDatabaseRef.child(uploadId).child("location").setValue(location);
                                     mDatabaseRef.child(uploadId).child("description").setValue(des);
                                     mDatabaseRef.child(uploadId).child("initiator").setValue(initiator);
