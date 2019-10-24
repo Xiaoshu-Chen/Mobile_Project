@@ -58,7 +58,7 @@ public class List_events extends AppCompatActivity implements AdapterView.OnItem
                 final String[] event_name;
                 for (DataSnapshot eventSnapShot : dataSnapshot.getChildren()) {
                     String adate = (String) eventSnapShot.child("date").getValue();
-                    String atime = (String) eventSnapShot.child("time").getValue();
+                    String atime = (String) eventSnapShot.child("start_time").getValue();
                     int date = Integer.parseInt(adate);
                     int time = Integer.parseInt(atime);
 

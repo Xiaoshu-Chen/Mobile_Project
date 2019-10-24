@@ -77,7 +77,7 @@ public class Profile extends AppCompatActivity {
 
                     String name = (String) event.child("name").getValue();
                     String adate = (String) event.child("date").getValue();
-                    String atime = (String) event.child("time").getValue();
+                    String atime = (String) event.child("start_time").getValue();
 //                    Log.d("list1", adate);
                     int date = Integer.parseInt(adate);
                     int time = Integer.parseInt(atime);

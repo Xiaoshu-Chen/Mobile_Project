@@ -272,7 +272,7 @@ public class MapsActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot eventSnapShot : dataSnapshot.getChildren()) {
                     String adate = (String) eventSnapShot.child("date").getValue();
-                    String atime = (String) eventSnapShot.child("time").getValue();
+                    String atime = (String) eventSnapShot.child("start_time").getValue();
                     int date = Integer.parseInt(adate);
                     int time = Integer.parseInt(atime);
 
