@@ -36,7 +36,7 @@ import java.util.Locale;
 public class View_Event extends AppCompatActivity {
 
     String eventId, uid;
-    TextView name, date, time, address, des, participant;
+    TextView name, date, time, address, des, participant, etime;
     ImageView photo, back;
     Button join;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -58,6 +58,7 @@ public class View_Event extends AppCompatActivity {
         photo = findViewById(R.id.photo);
         join = findViewById(R.id.join);
         back = findViewById(R.id.back);
+        etime = findViewById(R.id.etime);
 
         uid = user.getUid();
 
@@ -90,8 +91,10 @@ public class View_Event extends AppCompatActivity {
                     name.setText(dataSnapshot.child("name").getValue().toString());
                     String ddate = dataSnapshot.child("date").getValue().toString();
                     date.setText(ddate.substring(4, 6)+"/"+ddate.substring(2, 4)+"/"+ddate.substring(0, 2));
-                    String dtime = dataSnapshot.child("time").getValue().toString();
+                    String dtime = dataSnapshot.child("start_time").getValue().toString();
                     time.setText(dtime.substring(0,2)+":"+dtime.substring(2,4));
+                    String eetime = dataSnapshot.child("end_time").getValue().toString();
+                    etime.setText(eetime.substring(0,2)+":"+eetime.substring(2,4));
                     String daddress = dataSnapshot.child("location").getValue().toString();
                     String[] ddaddress = daddress.split(",");
                     String full_address = getCompleteAddressString(Double.parseDouble(ddaddress[0]), Double.parseDouble(ddaddress[1]));
