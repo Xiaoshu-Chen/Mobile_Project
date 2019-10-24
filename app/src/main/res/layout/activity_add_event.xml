@@ -126,6 +126,7 @@
         android:textSize="30dp"
         android:layout_below="@+id/time"/>
 
+
     <TextView
         android:id="@+id/etime"
         android:layout_width="match_parent"
@@ -137,6 +138,7 @@
         android:layout_below="@+id/etime_text"
         android:paddingTop="8dp"
         android:clickable="true"/>
+
 
     <TextView
         android:id="@+id/address_text"
