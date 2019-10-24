@@ -103,17 +103,7 @@
         android:textColor="#101010"
         android:textSize="30dp"
         android:layout_below="@+id/date"/>
-
-    <TextView
-        android:id="@+id/end_time_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:text="End time:"
-        android:textColor="#101010"
-        android:textSize="30dp"
-        android:layout_below="@+id/time"/>
-
+    
 
     <TextView
         android:id="@+id/time"
@@ -127,17 +117,6 @@
         android:paddingTop="8dp"
         android:clickable="true"/>
 
-    <TextView
-        android:id="@+id/end_time"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="7dp"
-        android:background="@drawable/edit_text2"
-        android:paddingLeft="10dp"
-        android:textSize="25dp"
-        android:layout_below="@+id/end_time_text"
-        android:paddingTop="8dp"
-        android:clickable="true"/>
 
     <TextView
         android:id="@+id/address_text"
@@ -147,7 +126,7 @@
         android:text="Location:"
         android:textColor="#101010"
         android:textSize="30dp"
-        android:layout_below="@+id/end_time"/>
+        android:layout_below="@+id/time"/>
 
     <LinearLayout
         android:id="@+id/map"
